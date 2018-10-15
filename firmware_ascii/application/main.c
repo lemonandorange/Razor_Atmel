@@ -20,7 +20,7 @@ volatile u32 G_u32ApplicationFlags = 0;                /* Global applications fl
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
-static u16 u16BlinkCount = 0;
+
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
@@ -110,67 +110,7 @@ void main(void)
     HEARTBEAT_OFF();
     SystemSleep();
     HEARTBEAT_ON();
-    
-    
-    
-    LedOff(WHITE);
-    LedOff(PURPLE);
-    LedOff(BLUE);
-    LedOff(CYAN);
-    LedOff(GREEN);
-    LedOff(YELLOW);
-    LedOff(ORANGE);
-    LedOff(RED);
-    
-    u16BlinkCount++; 
-    if(u16BlinkCount>=0 && u16BlinkCount <900) 
-    {   
-      LedPWM(WHITE, LED_PWM_100);
-    } 
-    if(u16BlinkCount>=900 && u16BlinkCount <1700) 
-    {  
-      LedOff(WHITE);
-      LedOn(PURPLE);
-      LedPWM(PURPLE, LED_PWM_90);
-    } 
-    if(u16BlinkCount>=1700 && u16BlinkCount <2300) 
-    { 
-      LedOff(PURPLE);
-      LedOn(BLUE);
-      LedPWM(BLUE, LED_PWM_80);
-    }
-    if(u16BlinkCount>=2300 && u16BlinkCount <2800) 
-    {  
-      LedOff(BLUE);
-      LedOn(CYAN);
-      LedPWM(CYAN, LED_PWM_70);
-    }
-    if(u16BlinkCount>=2800 && u16BlinkCount <3200) 
-    { 
-      LedOff(CYAN);
-      LedOn(GREEN);
-      LedPWM(GREEN, LED_PWM_60);
-    }
-    if(u16BlinkCount>=3200 && u16BlinkCount <3500) 
-    { 
-      LedOff(GREEN);
-      LedOn(YELLOW);
-      LedPWM(YELLOW, LED_PWM_50);
-    }
-    if(u16BlinkCount>=3500 && u16BlinkCount <3700) 
-    { 
-      LedOff(YELLOW);
-      LedOn(ORANGE);
-      LedPWM(ORANGE, LED_PWM_40);
-    }
-    if(u16BlinkCount>=3700 && u16BlinkCount <3800) 
-    { 
-      LedOff(ORANGE);
-      LedOn(RED);
-      LedPWM(RED, LED_PWM_30);
-      u16BlinkCount = 0; 
-    }
-    
+       
   } /* end while(1) main super loop */
   
 } /* end main() */
