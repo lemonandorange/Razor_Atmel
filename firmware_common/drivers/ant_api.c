@@ -265,7 +265,6 @@ extern u8 G_au8AntLibConfig[];                                /* From ant.c */
 extern u8 G_au8AntBroadcastDataMessage[];                     /* From ant.c */
 extern u8 G_au8AntAckDataMessage[];                           /* From ant.c */
 
-
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "AntApi_<type>Name" and be declared as static.
