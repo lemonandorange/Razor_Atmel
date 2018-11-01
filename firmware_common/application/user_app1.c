@@ -66,7 +66,8 @@ static u32 UserApp1_u32Timeout;                      /* Timeout counter used acr
 static AntAssignChannelInfoType UserApp1_sChannelInfo;
 static u8 UserApp1_au8MessageFail[] = "\n\r***ANT channel setup failed***\n\n\r";
 
-
+u8 au8DataContent[] = "xxxxxxxxxxxxxxxx";
+//u8 G_au8AntApiCurrentData[];
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
@@ -193,7 +194,8 @@ static void UserApp1SM_AntChannelAssign()
 
 static void UserApp1SM_Idle(void)
 { 
-  static u8 au8TestMessage[] = {0, 0, 0, 0, 0xA5, 0, 0, 0};
+  static u8 au8TestMessage[] = {0x5B, 0, 0, 0, 0xFF, 0, 0, 0};
+#if 0
   au8TestMessage[1]=0x00;
   if(IsButtonPressed(BUTTON0))
   {
@@ -214,18 +216,36 @@ static void UserApp1SM_Idle(void)
   {
     au8TestMessage[4]=0xff;
   }
-   
+#endif
   if( AntReadAppMessageBuffer() )
   {
      /* New message from ANT task: check what it is */
     if(G_eAntApiCurrentMessageClass == ANT_DATA)
     {
       /* We got some data */
+       for(u8 i = 0; i < ANT_DATA_BYTES; i++)
+      {
+        au8DataContent[2 * i]     = HexToASCIICharUpper(G_au8AntApiCurrentMessageBytes[i] / 16);
+        au8DataContent[2 * i + 1] = HexToASCIICharUpper(G_au8AntApiCurrentMessageBytes[i] % 16);
+      }
+      LCDMessage(LINE2_START_ADDR, au8DataContent);
     }
     else if(G_eAntApiCurrentMessageClass == ANT_TICK)
     {
      /* A channel period has gone by: typically this is when new data should be queued to be sent */
       /* Update and queue the new message data */
+      if(G_au8AntApiCurrentMessageBytes[ANT_TICK_MSG_EVENT_CODE_INDEX]==EVENT_TRANSFER_TX_FAILED)
+      {
+          au8TestMessage[3]++;
+          if(au8TestMessage[3] == 0)
+          {
+            au8TestMessage[2]++;
+            if(au8TestMessage[2] == 0)
+            {
+              au8TestMessage[1]++;
+            } 
+          }
+      }
       au8TestMessage[7]++;
       if(au8TestMessage[7] == 0)
       {
@@ -235,7 +255,7 @@ static void UserApp1SM_Idle(void)
           au8TestMessage[5]++;
         }
       }
-      AntQueueBroadcastMessage(ANT_CHANNEL_USERAPP, au8TestMessage);
+      AntQueueAcknowledgedMessage(ANT_CHANNEL_USERAPP, au8TestMessage);
     }
   } /* end AntReadAppMessageBuffer() */
   
